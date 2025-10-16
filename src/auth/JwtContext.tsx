@@ -93,6 +93,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const storageAvailable = localStorageAvailable();
 
   const initialize = useCallback(async () => {
+    // BYPASS AUTHENTICATION - Mock authenticated user for development
+    dispatch({
+      type: Types.INITIAL,
+      payload: {
+        isAuthenticated: true,
+        user: {
+          id: 'mock-user-123',
+          email: 'demo@minimals.cc',
+          displayName: 'Demo User',
+          photoURL: '/assets/images/avatars/avatar_default.jpg',
+          role: 'admin',
+        },
+      },
+    });
+
+    /* Original authentication logic - commented out for development
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
 
@@ -129,6 +145,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         },
       });
     }
+    */
   }, [storageAvailable]);
 
   useEffect(() => {

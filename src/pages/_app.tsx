@@ -24,6 +24,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // ----------------------------------------------------------------------
 
+import { useEffect, useState } from 'react';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 // next
 import { NextPage } from 'next';
@@ -74,6 +75,17 @@ export default function MyApp(props: MyAppProps) {
   const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  // Fix hydration issue - only render on client side
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <CacheProvider value={emotionCache}>
